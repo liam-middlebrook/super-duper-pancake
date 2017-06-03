@@ -15,3 +15,6 @@ OIDC_CLIENT_CONFIG = {
     'post_logout_redirect_uris': [os.environ.get('APP_OIDC_LOGOUT_REDIRECT_URI',
         'https://superduperpancake.csh.rit.edu/logout')]
 }
+
+# a base64 encoded JSON list of attributes to retrieve
+OIDC_ATTRIBUTES_LIST = os.environ.get('APP_OIDC_ATTRIBS', b'WyJwcmVmZXJyZWRfdXNlcm5hbWUiLCAibmFtZSJd')

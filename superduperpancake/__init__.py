@@ -1,3 +1,5 @@
+import base64
+import json
 import os
 import requests
 from flask import Flask, jsonify, render_template, redirect, url_for, session
@@ -18,14 +20,14 @@ auth = OIDCAuthentication(app,
 @app.route("/")
 @auth.oidc_auth
 def index():
-    username = session['userinfo'].get('preferred_username', '')
-    display_name = session['userinfo'].get('name', '')
+    attributes_raw = base64.b64decode(app.config['OIDC_ATTRIBUTES_LIST'])
+    attributes_list = json.loads(attributes_raw.decode('ascii'))
 
-    return jsonify({
-        "preferred_username": username,
-        "name": display_name
-    })
+    results_dict = {}
+    for attrib in attributes_list:
+        results_dict[attrib] = session['userinfo'].get(attrib, '')
 
+    return jsonify(results_dict)
 
 @app.route('/logout')
 @auth.oidc_logout
